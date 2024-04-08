@@ -12,18 +12,6 @@ connection_string = os.getenv(
     "connection_string"
 )  # + "digischeduler?retryWrites=true&w=majority"
 
-data_structures = {
-    "firstName": "",
-    "middleName": "",
-    "lastName": "",
-    "dob": "",
-    "gender": "",
-    "mobileNumber": "",
-    "capturedImages": None,
-    "userEmail": "",
-    "userpassword": None,
-}
-
 
 client = MongoClient(connection_string)
 
@@ -71,11 +59,11 @@ def get_data_from_db(email):
 
 def send_data_to_db(data):
     data.pop("capturedImages")
+    data.pop("file")
     print(data)
 
     db = client.get_database()
     collection = db["users"]
-    print(data["email"])
     # Specify the filter based on the email field
     filter_query = {"email": data["email"]}
 

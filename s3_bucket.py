@@ -78,8 +78,6 @@ def upload_image_from_base64(image_path, base64_image):
         "s3", aws_access_key_id=access_key_id, aws_secret_access_key=secret_access_key
     )
 
-    print(base64_image)
-
     # Decode base64 image data
     image_data = base64.b64decode(base64_image)
 
@@ -116,13 +114,13 @@ def upload_PDF(PDF_file):
         print(f"Error uploading image: {e}")
 
 
-import base64
+# import base64
 
-import boto3
-from PIL import Image
+# import boto3
+# from PIL import Image
 
 
-def get_image_from_s3(bucket_name, image_key, access_key_id, secret_access_key):
+def get_image_from_s3(image_key):
     # Create an S3 client with access key ID and secret access key
     s3 = boto3.client(
         "s3", aws_access_key_id=access_key_id, aws_secret_access_key=secret_access_key
@@ -143,41 +141,49 @@ def get_image_from_s3(bucket_name, image_key, access_key_id, secret_access_key):
         return None
 
 
-def save_image_as_base64(image, image_name):
+def save_image_as_base64(image):
     try:
         # Convert the image to base64
         buffered = BytesIO()
         image.save(buffered, format="PNG")
         base64_image = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-        # Save the base64 image to a file
-        with open(f"{image_name}.txt", "w") as f:
-            f.write(base64_image)
-
-        print(f"Saved base64 image as {image_name}.txt")
+        return base64_image
 
     except Exception as e:
         print(f"Error saving base64 image: {e}")
 
 
-# Replace 'your-bucket-name', 'your-image-key', 'your-access-key-id', and 'your-secret-access-key' with your actual values
-bucket_name = "your-bucket-name"
-image_key = "your-image-key"
-access_key_id = "your-access-key-id"
-secret_access_key = "your-secret-access-key"
+def get_image_and_conver_to_base64(image):
+    image = get_image_from_s3(image)
 
-# Get the image from S3
-image = get_image_from_s3(bucket_name, image_key, access_key_id, secret_access_key)
-
-if image is not None:
-    # Save the image as base64
-    image_name = image_key.split("/")[-1].split(".")[0]  # Extract image name from key
-    save_image_as_base64(image, image_name)
-else:
-    print("Image not found or could not be retrieved.")
+    if image is not None:
+        # Save the image as base64
+        # image_name = image.split("/")[-1].split(".")[0]  # Extract image name from key
+        image = save_image_as_base64(image)
+        return image
+    else:
+        print("Image not found or could not be retrieved.")
 
 
-# list_files_in_bucket(bucket_name, access_key_id, secret_access_key)
+def get_pdf_from_s3(FilePath):
+
+    # Local file path to save the PDF
+    local_file_path = "uploads/downloaded_pdf.pdf"
+
+    s3 = boto3.client(
+        "s3", aws_access_key_id=access_key_id, aws_secret_access_key=secret_access_key
+    )
+
+    try:
+        # Download the PDF file from S3 bucket
+        s3.download_file(bucket_name, FilePath, local_file_path)
+        print(f"PDF file downloaded successfully: {local_file_path}")
+    except Exception as e:
+        print(f"Error downloading PDF file: {e}")
+
+
+# list_files_in_bucket()
 
 # delete_files_in_bucket(bucket_name, access_key_id, secret_access_key)
 
