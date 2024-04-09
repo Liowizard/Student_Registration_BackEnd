@@ -114,12 +114,6 @@ def upload_PDF(PDF_file):
         print(f"Error uploading image: {e}")
 
 
-# import base64
-
-# import boto3
-# from PIL import Image
-
-
 def get_image_from_s3(image_key):
     # Create an S3 client with access key ID and secret access key
     s3 = boto3.client(
@@ -181,15 +175,3 @@ def get_pdf_from_s3(FilePath):
         print(f"PDF file downloaded successfully: {local_file_path}")
     except Exception as e:
         print(f"Error downloading PDF file: {e}")
-
-
-# list_files_in_bucket()
-
-# delete_files_in_bucket(bucket_name, access_key_id, secret_access_key)
-
-
-# create_folder_in_bucket(
-#     bucket_name, "student_document", access_key_id, secret_access_key
-# )
-
-# list_files_in_bucket()

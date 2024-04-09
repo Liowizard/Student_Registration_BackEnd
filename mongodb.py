@@ -42,21 +42,6 @@ def get_data_from_db(email):
         return {"error": "Could not find user with this email"}
 
 
-# def send_data_to_db(data):
-
-#     data.pop("capturedImages")
-
-#     print(data)
-
-#     db = client.get_database()
-
-#     collection = db["users"]
-
-#     collection.insert_one(data)
-
-#     return "done"
-
-
 def send_data_to_db(data):
     data.pop("capturedImages")
     data.pop("file")
@@ -74,3 +59,15 @@ def send_data_to_db(data):
         return "Document inserted"
     else:
         return "Document updated"
+
+
+def get_password(email):
+    db = client.get_database()
+    collection = db["users"]
+
+    query = {"email": email}
+
+    result = collection.find_one(query)
+
+    if result:
+        return result["password"]

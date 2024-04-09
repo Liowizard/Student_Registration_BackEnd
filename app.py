@@ -1,10 +1,11 @@
 import json
+import os
 
 from flask import Flask, request, session
 from flask_cors import CORS
 
 from email_otp import sendEmailVerificationRequest
-from mongodb import get_data_from_db, send_data_to_db
+from mongodb import get_data_from_db, get_password, send_data_to_db
 from s3_bucket import get_image_and_conver_to_base64, upload_image_from_base64
 
 app = Flask(__name__)
@@ -28,6 +29,17 @@ def verify():
     print("current_otp", current_otp)
     session["current_otp"] = current_otp
     return current_otp
+
+
+@app.route("/send_user_pasword", methods=["POST", "get"])
+def send_user_pasword():
+    Email = request.args.get("userEmail")
+    Password = get_password(Email)
+    if Password:
+        print("Passwords")
+        return {"password": Password}
+    else:
+        return {"message": "Invalid User"}
 
 
 @app.route("/send_Data", methods=["POST", "get"])
@@ -85,4 +97,4 @@ def GetData():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
