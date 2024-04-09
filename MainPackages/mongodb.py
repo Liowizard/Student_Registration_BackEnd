@@ -8,12 +8,12 @@ from pymongo import MongoClient
 load_dotenv()
 
 
-connection_string = os.getenv(
-    "connection_string"
+connectionString = os.getenv(
+    "connectionString"
 )  # + "digischeduler?retryWrites=true&w=majority"
 
 
-client = MongoClient(connection_string)
+client = MongoClient(connectionString)
 
 
 db = client.get_database()
@@ -21,8 +21,8 @@ db = client.get_database()
 collection = db["users"]
 
 
-def get_data_from_db(email):
-    client = MongoClient(connection_string)
+def getDataFromDB(email):
+    client = MongoClient(connectionString)
 
     db = client.get_database()
 
@@ -38,11 +38,9 @@ def get_data_from_db(email):
     if result:
         return result
         # print(result)
-    else:
-        return {"error": "Could not find user with this email"}
 
 
-def send_data_to_db(data):
+def sendDataToDB(data):
     data.pop("capturedImages")
     data.pop("file")
     print(data)
@@ -61,7 +59,7 @@ def send_data_to_db(data):
         return "Document updated"
 
 
-def get_password(email):
+def getPassword(email):
     db = client.get_database()
     collection = db["users"]
 
