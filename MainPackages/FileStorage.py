@@ -1,5 +1,6 @@
 import base64
 import os
+import time
 from io import BytesIO
 
 import boto3
@@ -133,12 +134,15 @@ def saveImageAsBase64(image):
 
 
 def getImageAndConverBoBase64(image):
+    begin = time.time()
     image = getImageFromS3(image)
 
     if image is not None:
         # Save the image as base64
         # image_name = image.split("/")[-1].split(".")[0]  # Extract image name from key
         image = saveImageAsBase64(image)
+        end = time.time()
+        print(f"Total time to take the image from S3 bucket {end - begin}")
         return image
     else:
         print("Image not found or could not be retrieved.")
