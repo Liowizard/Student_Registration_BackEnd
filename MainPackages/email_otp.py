@@ -12,13 +12,13 @@ def generateOTP(otp_size=6):
 
 def sendEmailVerificationRequest(
     receiver,
-    sender="ajeshrandam@gmail.com",
+    sender="sdigival@gmail.com",
     custom_text="Hello, Your OTP is ",
     subject="Digival Solutions Registration ",
 ):
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
-    google_app_password = "hehf ufkw qdpa dlnt"
+    google_app_password = "ycik tvmw hmyz vuau"
     server.login(sender, google_app_password)
     cur_otp = generateOTP()
 
@@ -34,3 +34,33 @@ def sendEmailVerificationRequest(
     # server.sendmail()
     server.quit()
     return cur_otp
+
+
+def sendEmail(
+    receiver,
+    reason,
+    sender="sdigival@gmail.com",
+    custom_text="Hi i am sorry to inform you that your application has been rejected due to : \n\n ",
+    subject="Digival Solutions Registration ",
+):
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    google_app_password = "ycik tvmw hmyz vuau"
+    server.login(sender, google_app_password)
+
+    msg = EmailMessage()
+    msg.set_content(custom_text + reason)
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = receiver
+    server.send_message(msg)
+
+    # msg = custom_text + cur_otp
+    # server.sendmail(sender, receiver, msg)
+    # server.sendmail()
+    server.quit()
+    return reason
+
+
+# sendEmail("ajeshrandam@gmail.com", "ned to change the image ")

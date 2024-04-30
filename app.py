@@ -1,12 +1,18 @@
 import json
 import os
 
-from flask import Flask, request, session
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 
 from MainPackages.email_otp import sendEmailVerificationRequest
 from MainPackages.FileStorage import getImageAndConverBoBase64, uploadImageFromBase64
-from MainPackages.mongodb import getDataFromDB, getPassword, sendDataToDB
+from MainPackages.mongodb import (
+    DataForApproval,
+    getDataFromDB,
+    getPassword,
+    sendDataToDB,
+    update_approval_status,
+)
 
 app = Flask(__name__)
 
@@ -34,10 +40,10 @@ def verify():
 @app.route("/sendUserPasword", methods=["POST", "get"])
 def sendUserPasword():
     Email = request.args.get("userEmail")
-    Password = getPassword(Email)
-    if Password:
-        print("Passwords", Password)
-        return {"password": Password}
+    data = getPassword(Email)
+    if data:
+        print("data", data)
+        return data
     else:
         return {"message": "Invalid User"}
 
@@ -97,6 +103,21 @@ def GetData():
     sendDataToDB(json_data)
 
     return "done"
+
+
+@app.route("/DataForApproval", methods=["POST", "GET"])
+def SendDataForApproval():
+    data = DataForApproval()
+    return jsonify(users=data)
+
+
+@app.route("/DataApprovalResult", methods=["POST", "GET"])
+def DataApprovalResult():
+    data = request.get_json()  # Get the JSON data from the request
+    print("Data", data)
+    update_approval_status(data)
+
+    return "Working"
 
 
 if __name__ == "__main__":
