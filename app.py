@@ -102,7 +102,7 @@ def GetData():
 
     sendDataToDB(json_data)
 
-    return "done"
+    return {"status": "success"}
 
 
 @app.route("/DataForApproval", methods=["POST", "GET"])
